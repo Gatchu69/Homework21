@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+let countriesArray = [Country]() 
 extension CountriesViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {

@@ -9,8 +9,9 @@ import UIKit
 
 class CountriesViewController: UIViewController {
     //MARK: - Properties
-    let urlString = "https://restcountries.com/v3.1/all"
-
+    let viewModel = CountriesViewModel()
+    var countries = [Country]()
+    
     lazy var headerLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
@@ -38,12 +39,13 @@ class CountriesViewController: UIViewController {
         return field
     }()
     
-    var countriesArray = [Country]()
+    
     
     //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        getData()
+        viewModel.delegate = self
+        viewModel.viewDidLoad()
         setUpUI()
     }
     
@@ -68,19 +70,14 @@ class CountriesViewController: UIViewController {
         countriesTableView.separatorStyle = .none
     }
     
-    func getData() {
-        NetworkService.networkService.getData(urlString: urlString) { (result: Result<[Country], Error>) in
-            switch result {
-            case .success(let success):
-                self.countriesArray = success
-                self.countriesTableView.reloadData()
-            case .failure(let failure):
-                print(failure.localizedDescription)
-            }
-        }
-    }
+    
 }
 
-
+extension CountriesViewController: CountriesViewModelDelegate {
+    func countriesFetched(_ countries: [Country]) {
+        self.countries = countries
+        self.countriesTableView.reloadData()
+    }
+}
 
 
